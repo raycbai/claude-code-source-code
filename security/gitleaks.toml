@@ -25,3 +25,17 @@ id = "positional-auth-password"
 description = "Hardcoded password passed directly to an authentication function"
 regex = '''(?i)(?:get_zoominfo_jwt|login|authenticate|auth)\s*(?:=\s*)?\(\s*["'][^"'\r\n]+["']\s*,\s*["']([^"'\r\n]{4,200})["']'''
 secretGroup = 1
+
+[[rules]]
+id = "unquoted-config-password"
+description = "Unquoted credential in a configuration file"
+path = '''(?i)(?:\.env(?:\.[^/]*)?|\.(?:ini|cfg|conf|properties))$'''
+regex = '''(?im)^[ \t]*(?:export[ \t]+)?[A-Z_]*(?:PASSWORD|PASSWD|PWD|SECRET|TOKEN|API_KEY)[ \t]*=[ \t]*([^\s'"#$\r\n]{4,200})'''
+secretGroup = 1
+
+[[rules]]
+id = "unquoted-yaml-password"
+description = "Unquoted credential in YAML"
+path = '''(?i)\.ya?ml$'''
+regex = '''(?im)^[ \t]*(?:password|passwd|client_secret|api[_-]?key|access[_-]?token)[ \t]*:[ \t]*([^\s'"#${{\[\r\n]{4,200})'''
+secretGroup = 1

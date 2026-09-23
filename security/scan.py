@@ -27,7 +27,8 @@ def main():
     modes.add_argument('--range', dest='commit_range')
     modes.add_argument('--tree', action='store_true', help='Scan every tracked file at HEAD')
     args = parser.parse_args()
-    binary = os.environ.get('GITLEAKS_BIN') or shutil.which('gitleaks') or str(ROOT / '.security-tools/gitleaks')
+    local_binary = ROOT / '.security-tools/gitleaks'
+    binary = os.environ.get('GITLEAKS_BIN') or (str(local_binary) if local_binary.is_file() else shutil.which('gitleaks')) or str(local_binary)
     if not Path(binary).is_file():
         parser.error('Install the pinned scanner with: python3 security/install_gitleaks.py')
     base = head = None
