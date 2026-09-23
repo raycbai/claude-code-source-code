@@ -1,0 +1,27 @@
+title = "Independent credential audit"
+[extend]
+useDefault = true
+
+[[rules]]
+id = "audit-password-assignment"
+description = "Potential hardcoded password (requires manual triage)"
+regex = '''(?i)(?:password|passwd|pwd|db_pass|smtp_pass|client_secret)\s*["']?\s*[:=]\s*["']([^\r\n"']{4,200})["']'''
+secretGroup = 1
+
+[[rules]]
+id = "audit-basic-auth-url"
+description = "Credentials in connection URL"
+regex = '''(?i)(?:https?|postgres(?:ql)?|mysql|mongodb(?:\+srv)?|redis|amqps?|ftp|sftp)://[^\s/:@"']{1,100}:([^\s/@"']{3,200})@'''
+secretGroup = 1
+
+[[rules]]
+id = "wordpress-auth-secret"
+description = "WordPress authentication key or salt"
+regex = '''(?i)define\s*\(\s*['"](?:AUTH_KEY|SECURE_AUTH_KEY|LOGGED_IN_KEY|NONCE_KEY|AUTH_SALT|SECURE_AUTH_SALT|LOGGED_IN_SALT|NONCE_SALT|RSSSL_KEY|DB_PASSWORD)['"]\s*,\s*['"]([^'"\r\n]{4,200})['"]'''
+secretGroup = 1
+
+[[rules]]
+id = "positional-auth-password"
+description = "Hardcoded password passed directly to an authentication function"
+regex = '''(?i)(?:get_zoominfo_jwt|login|authenticate|auth)\s*(?:=\s*)?\(\s*["'][^"'\r\n]+["']\s*,\s*["']([^"'\r\n]{4,200})["']'''
+secretGroup = 1
